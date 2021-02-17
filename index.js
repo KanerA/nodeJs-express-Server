@@ -35,9 +35,29 @@ app.put('/v3/b/:id', (req, res) => {
     res.send(successMessage);
 });
 
-// app.post('/v3/b/:id', (req, res) => {
-
-// })
+app.post('/v3/b/:id', (req, res) => {
+    const {body} = req;
+    const {id} = req.params;
+    try {
+        fs.writeFileSync(
+          `./bins/${id}.json`,
+          JSON.stringify(body, null, 4)
+        );
+        res.status(200).json(`
+        {
+            "record": 
+              ${JSON.stringify(body)}
+            ,
+            "metadata": {
+              "id": "${id},
+              "createdAt": ${Date.now()}
+            }
+          }
+        `);
+      } catch (e) {
+        res.status(500).json({ message: "Error!", error: e });
+      }
+})
 
 app.listen(3000, () => {
     console.log("app is running on port 3000");
