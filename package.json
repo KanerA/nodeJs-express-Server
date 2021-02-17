@@ -1,0 +1,21 @@
+{
+  "name": "backendtask",
+  "version": "1.0.0",
+  "description": "back end server for to-do list task",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "backendTask"
+  },
+  "author": "Assaf",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
