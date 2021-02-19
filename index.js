@@ -60,15 +60,19 @@ app.put('/v3/b/:id', (req, res) => {
 app.post('/v3/b', (req, res) => {
     const {body} = req;
     const binId = uuidv4();
-    try {
-        fs.writeFileSync(
-          `./bins/${binId}.json`,
-          JSON.stringify( {body , 'id': binId}, null, 4)
-        );
-        res.status(200).send(JSON.stringify({"success":"true", "data":body , "id":binId}));
-      } catch (e) {
-        res.status(500).json(JSON.stringify({ message: "Error!", error: e }));
-      } 
+    const binsDirExist = fs.existsSync(`./bins`);
+    if(!binsDirExist){ // if the bins directory does not exist, it creates one
+      fs.mkdirSync('./bins');
+    }
+  try {
+    fs.writeFileSync(
+    `./bins/${binId}.json`,
+    JSON.stringify( {body , 'id': binId}, null, 4)
+    );
+    res.status(200).send(JSON.stringify({"success":"true", "data":body , "id":binId}));
+  } catch (e) {
+      res.status(500).json(JSON.stringify({ message: "Error!", error: e }));
+    } 
 });
 
 app.delete('/v3/b/:id', (req, res) => {
