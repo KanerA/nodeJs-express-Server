@@ -1,5 +1,6 @@
 const express = require('express');
 const fs = require('fs');
+const { v4: uuidv4 } = require('uuid');
 const app = express();
 app.use(express.json());
 
@@ -15,7 +16,6 @@ app.get('/v3/b/:id', (req, res) => {
 
 app.put('/v3/b/:id', (req, res) => {
     const body = req.body;
-    console.log("body:", body);
     const {id} = req.params;
     const binExist = fs.existsSync(`./bins/${id}.json`);
     if(!binExist){
@@ -25,7 +25,7 @@ app.put('/v3/b/:id', (req, res) => {
           });
         return;
     }
-    fs.writeFileSync(`./bins/${id}.json`, JSON.stringify(body,null,4));
+    fs.writeFileSync(`./bins/${id}.json`, JSON.stringify(({body , "id": id}),null,4));
     const successMessage = {
         success: true,
         data: body,
@@ -35,31 +35,32 @@ app.put('/v3/b/:id', (req, res) => {
     res.send(successMessage);
 });
 
-app.post('/v3/b/:id', (req, res) => {
+app.post('/v3/b', (req, res) => {
     const {body} = req;
-    const {id} = req.params;
+    const binId = uuidv4();
     try {
         fs.writeFileSync(
-          `./bins/${id}.json`,
-          JSON.stringify(body, null, 4)
+          `./bins/${binId}.json`,
+          JSON.stringify( {body , 'id': binId}, null, 4)
         );
-        res.status(200).json(`
-        {
-            "record": 
-              ${JSON.stringify(body)}
-            ,
-            "metadata": {
-              "id": "${id},
-              "createdAt": ${Date.now()}
-            }
-          }
-        `);
+        res.status(200).send(JSON.stringify({"success":"true", "data":body , "id":binId}));
       } catch (e) {
-        res.status(500).json({ message: "Error!", error: e });
-      }
-})
+        res.status(500).json(JSON.stringify({ message: "Error!", error: e }));
+      } 
+});
+
+app.delete('/v3/b/:id', (req, res) => {
+  const {id} = req.params;
+  console.log('hello');
+  try{
+    fs.unlinkSync(`./bins/${id}.json`);
+    console.log('file deleted successfully');
+    res.json(JSON.stringify({"success": true, "id": id, "message": "Bin "+ id +" is deleted successfully."}));
+  } catch{
+    res.status(404).json({"message": "Bin not found","success": false})
+  };
+});
 
 app.listen(3000, () => {
     console.log("app is running on port 3000");
 });
-
