@@ -2,7 +2,29 @@ const express = require('express');
 const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
 const app = express();
+const dir = './bins';
 app.use(express.json());
+
+const bins =[];
+
+app.get('/v3/b', (req, res) => {
+  const binsContent = [];
+  try{
+    fs.readdir(dir, (err, files) => { 
+      if(!files){
+        res.status(200).send('No files to show');
+      }
+      for(file of files){
+        const fileContent = JSON.parse(fs.readFileSync(`./bins/${file}`));
+        let temp = fileContent.body;
+        binsContent.push(temp);
+      }
+      res.send(JSON.stringify(binsContent));
+    })
+  } catch(err) {
+    console.log(err + "Error");
+  }
+});
 
 app.get('/v3/b/:id', (req, res) => {
     const {id} = req.params;
