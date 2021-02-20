@@ -18,3 +18,13 @@ const checkBin = (req, res, next) => {
     }
     next();
 };
+
+const checkIfBlank = (req, res, next) => {
+    if(req.body && Object.keys(req.body).length === 0 && req.body.constructor === Object){
+        res.status(400).send({"message": "Bin cannot be blank"});
+        return;
+    }
+    next();
+}
+
+module.exports = { checkId, checkBin, checkIfBlank };
