@@ -4,8 +4,10 @@ const { v4: uuidv4 } = require('uuid');
 const { checkId } = require('./utils');
 const { checkBin } = require('./utils');
 const { checkIfBlank } = require('./utils');
+const { timeOut } = require('./utils');
 const app = express();
 const dir = './bins';
+app.use(timeOut);
 app.use(express.json());
 
 

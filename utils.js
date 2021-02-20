@@ -27,4 +27,8 @@ const checkIfBlank = (req, res, next) => {
     next();
 }
 
-module.exports = { checkId, checkBin, checkIfBlank };
+function timeOut(req, res, next){
+    setTimeout(next, 1000);
+}
+
+module.exports = { checkId, checkBin, checkIfBlank, timeOut };
