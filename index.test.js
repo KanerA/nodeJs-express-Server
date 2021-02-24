@@ -52,3 +52,18 @@ describe("Test GET functionality", () => {
         expect(res.text).toBe('{"message":"Bin Not Found"}');
     });
 });
+
+describe("Testing the POST functionality", () => {
+
+    it("can add a new bin", async () => {
+        const res = await request(app).post('/v3/b').send(expectedRes);
+        expect(res.status).toBe(200);
+        expect(res.body.data.date).toEqual(expectedRes.date);
+    });
+
+    test("If can not add a bin with illegal body and an appropriate response is sent", async () => {
+        const res = await request(app).post('/v3/b').send({});
+        expect(res.status).toBe(400);
+    });
+});
+
