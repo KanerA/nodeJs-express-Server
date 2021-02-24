@@ -95,3 +95,23 @@ describe("Testing the PUT functionality" ,() => {
         expect(res.body).toEqual({"message": "Bin Not Found"});
     });
 });
+
+describe("Testing DELETE functionality", () => {
+
+    it("Should delete a bin by id", async () => {
+        const res = await request(app).delete(`/v3/b/${expectedRes.id}`);
+        expect(res.body.success).toBe(true);
+        expect(res.body.id).toBe(expectedRes.id);
+    });
+
+    test("if an illegal id is requested an appropriate response is sent", async () => {
+        const res = await request(app).delete(`/v3/b/${expectedRes.id}1`);
+        expect(res.status).toBe(400);
+        expect(res.text).toBe('{"message":"Invalid Bin Id provided"}')
+    });
+
+    test("if a bin is not found an appropriate response is sent", async () => {
+        const res = await request(app).delete(`/v3/b/${expectedRes.id}`);
+        expect(res.body.message).toBe("Bin not found or it doesn't belong to your account")
+    });
+});
