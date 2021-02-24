@@ -4,7 +4,7 @@
   "description": "back end server for to-do list task",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --verbose",
     "dev": "nodemon index.js"
   },
   "repository": {
@@ -14,10 +14,13 @@
   "author": "Assaf",
   "license": "ISC",
   "dependencies": {
+    "@types/jest": "^26.0.20",
     "express": "^4.17.1",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "nodemon": "^2.0.7"
+    "nodemon": "^2.0.7",
+    "jest": "^26.6.3",
+    "supertest": "^6.1.3"
   }
 }
