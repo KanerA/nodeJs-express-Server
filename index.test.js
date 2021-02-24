@@ -67,3 +67,31 @@ describe("Testing the POST functionality", () => {
     });
 });
 
+describe("Testing the PUT functionality" ,() => {
+
+    it("Should update a bin by id", async () => {
+        const res = await request(app).put(`/v3/b/${expectedRes.id}`).send(putRes);
+        console.log(res.body.success);
+        expect(res.body.success).toBe(true);
+    });
+
+    test("no new bin is created when updating", async () => {
+        const dirLength = fs.readdir(dir, (err, files) => files);
+        const res = await request(app).put(`/v3/b/${expectedRes.id}`).send(expectedRes);
+        const dirLengthAfter = fs.readdir(dir, (err, files) => files);
+        expect(res.status).toBe(200);
+        expect(dirLengthAfter).toEqual(dirLength);
+    });
+
+    test("if an illegal id is requested an appropriate response is sent", async () => {
+        const res = await request(app).put(`/v3/b/${expectedRes.id}5`).send(expectedRes);
+        expect(res.status).toBe(400);
+        expect(res.body).toEqual({"message": "Invalid Bin Id provided"});
+    });
+
+    test("if a bin is not found an appropriate response is sent", async () => {
+        const res = await request(app).put('/v3/b/a7cbb83e-056f-4753-a796-bbfe33ff68f0').send(putRes);
+        expect(res.status).toBe(404);
+        expect(res.body).toEqual({"message": "Bin Not Found"});
+    });
+});
