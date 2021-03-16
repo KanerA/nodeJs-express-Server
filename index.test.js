@@ -1,4 +1,3 @@
-const utilsFunctions = require('./utils');
 const request = require("supertest");
 const app = require("./app.js");
 const fs = require('fs');
@@ -71,7 +70,6 @@ describe("Testing the PUT functionality" ,() => {
 
     it("Should update a bin by id", async () => {
         const res = await request(app).put(`/v3/b/${expectedRes.id}`).send(putRes);
-        console.log(res.body.success);
         expect(res.body.success).toBe(true);
     });
 
